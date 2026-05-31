@@ -1,0 +1,110 @@
+package com.planb.blog.service;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.planb.blog.entity.Article;
+import com.planb.blog.mapper.ArticleMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
+
+    public Page<Article> getArticles(int page, int size) {
+        return this.page(new Page<>(page, size), 
+                new LambdaQueryWrapper<Article>().orderByDesc(Article::getCreateTime));
+    }
+
+    public Page<Article> searchArticles(String title, String category, String tag, 
+                                        LocalDate startDate, LocalDate endDate, 
+                                        int page, int size) {
+        LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
+        
+        if (StringUtils.hasText(title)) {
+            wrapper.like(Article::getTitle, title);
+        }
+        
+        if (StringUtils.hasText(category)) {
+            wrapper.eq(Article::getCategory, category);
+        }
+        
+        if (StringUtils.hasText(tag)) {
+            wrapper.like(Article::getTags, tag);
+        }
+        
+        if (startDate != null) {
+            LocalDateTime startDateTime = startDate.atStartOfDay();
+            wrapper.ge(Article::getCreateTime, startDateTime);
+        }
+        
+        if (endDate != null) {
+            LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+            wrapper.le(Article::getCreateTime, endDateTime);
+        }
+        
+        wrapper.orderByDesc(Article::getCreateTime);
+        
+        return this.page(new Page<>(page, size), wrapper);
+    }
+
+    public Optional<Article> getArticleById(Long id) {
+        return Optional.ofNullable(this.getById(id));
+    }
+
+    public boolean verifyPassword(Long id, String password) {
+        Article article = this.getById(id);
+        if (article != null && article.getIsLocked() != null && article.getIsLocked()) {
+            return article.getPassword() != null && article.getPassword().equals(password);
+        }
+        return true; // 如果没有锁，直接通过
+    }
+
+    public Page<Article> getArticlesByCategory(String category, int page, int size) {
+        LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(Article::getCategory, category);
+        wrapper.orderByDesc(Article::getCreateTime);
+        return this.page(new Page<>(page, size), wrapper);
+    }
+
+    public Page<Article> getArticlesByTag(String tag, int page, int size) {
+        LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(Article::getTags, tag);
+        wrapper.orderByDesc(Article::getCreateTime);
+        return this.page(new Page<>(page, size), wrapper);
+    }
+
+    public Article createArticle(Article article) {
+        if (article.getIsLocked() == null) {
+            article.setIsLocked(false);
+        }
+        this.save(article);
+        return article;
+    }
+
+    public Article updateArticle(Long id, Article articleDetails) {
+        Article article = this.getById(id);
+        if (article != null) {
+            article.setTitle(articleDetails.getTitle());
+            article.setContent(articleDetails.getContent());
+            article.setSummary(articleDetails.getSummary());
+            article.setCategory(articleDetails.getCategory());
+            article.setTags(articleDetails.getTags());
+            article.setIsLocked(articleDetails.getIsLocked());
+            article.setPassword(articleDetails.getPassword());
+            this.updateById(article);
+            return article;
+        }
+        return null;
+    }
+
+    public boolean deleteArticle(Long id) {
+        return this.removeById(id);
+    }
+}

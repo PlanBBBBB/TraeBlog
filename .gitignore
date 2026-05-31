@@ -39,3 +39,6 @@ frontend/pnpm-debug.log*
 *.tmp
 *.temp
 .cache/
+
+# Go Backend
+go-backend/

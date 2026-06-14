@@ -148,7 +148,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { marked } from 'marked'
 import { articleApi, categoryApi, tagApi } from '../../api/index'
@@ -190,6 +190,22 @@ const searchForm = ref({
   tag: ''
 })
 const dateRange = ref([])
+
+// 防抖自动查询
+let searchTimer = null
+const autoSearch = () => {
+  clearTimeout(searchTimer)
+  searchTimer = setTimeout(() => {
+    currentPage.value = 1
+    loadArticles()
+  }, 300)
+}
+
+// 监听筛选条件变化自动查询
+watch(() => searchForm.value.title, autoSearch)
+watch(() => searchForm.value.category, autoSearch)
+watch(() => searchForm.value.tag, autoSearch)
+watch(dateRange, autoSearch)
 
 const handleCurrentChange = (val) => {
   currentPage.value = val

@@ -97,7 +97,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { linkApi } from '../../api/index'
 
@@ -116,6 +116,19 @@ const form = ref({
 
 const searchForm = ref({ keyword: '' })
 const dateRange = ref([])
+
+// 防抖自动查询
+let searchTimer = null
+const autoSearch = () => {
+  clearTimeout(searchTimer)
+  searchTimer = setTimeout(() => {
+    currentPage.value = 1
+    loadLinks()
+  }, 300)
+}
+
+watch(() => searchForm.value.keyword, autoSearch)
+watch(dateRange, autoSearch)
 
 const handleCurrentChange = (val) => {
   currentPage.value = val

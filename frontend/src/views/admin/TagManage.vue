@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { tagApi } from '../../api/index'
 
@@ -94,6 +94,19 @@ const searchForm = ref({
   name: ''
 })
 const dateRange = ref([])
+
+// 防抖自动查询
+let searchTimer = null
+const autoSearch = () => {
+  clearTimeout(searchTimer)
+  searchTimer = setTimeout(() => {
+    currentPage.value = 1
+    loadTags()
+  }, 300)
+}
+
+watch(() => searchForm.value.name, autoSearch)
+watch(dateRange, autoSearch)
 
 const handleCurrentChange = (val) => {
   currentPage.value = val

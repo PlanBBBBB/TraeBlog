@@ -167,6 +167,11 @@ body {
   color: #888 !important;
 }
 
+[data-theme="dark"] .category-detail h1,
+[data-theme="dark"] .tag-detail h1 {
+  color: #eaeaea !important;
+}
+
 
 [data-theme="dark"] .outline-item {
   color: #b8b8b8 !important;

@@ -96,7 +96,7 @@ onMounted(() => {
 }
 
 :global([data-theme="dark"]) .category-detail h1 {
-  color: #eaeaea;
+  color: #eaeaea !important;
 }
 
 .loading {

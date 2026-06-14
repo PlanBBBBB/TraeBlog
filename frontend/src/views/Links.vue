@@ -40,6 +40,8 @@ onMounted(() => {
 <style scoped>
 .links {
   min-height: 100vh;
+  background: var(--bg-primary);
+  transition: background 0.3s;
 }
 
 .content {
@@ -50,8 +52,9 @@ onMounted(() => {
 
 .content h2 {
   margin-bottom: 35px;
-  color: #333;
+  color: var(--text-primary);
   font-size: 1.7rem;
+  transition: color 0.3s;
 }
 
 .link-list {
@@ -61,20 +64,20 @@ onMounted(() => {
 }
 
 .link-item {
-  background: white;
+  background: var(--bg-secondary);
   padding: 25px;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px var(--shadow-color);
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 15px;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
 }
 
 .link-item:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5px 20px var(--shadow-color);
 }
 
 .link-icon {
@@ -82,14 +85,16 @@ onMounted(() => {
 }
 
 .link-info h3 {
-  color: #333;
+  color: var(--text-primary);
   font-size: 1.2rem;
   margin-bottom: 5px;
+  transition: color 0.3s;
 }
 
 .link-info p {
-  color: #999;
+  color: var(--text-tertiary);
   font-size: 0.9rem;
   margin: 0;
+  transition: color 0.3s;
 }
 </style>

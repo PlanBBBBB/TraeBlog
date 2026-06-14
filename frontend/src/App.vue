@@ -525,6 +525,140 @@ body {
   border-top-color: #2a2a4e !important;
 }
 
+/* ========== 管理后台暗色模式 ========== */
+[data-theme="dark"] .admin-layout {
+  background: #181818 !important;
+}
+
+[data-theme="dark"] .admin-header {
+  background: linear-gradient(135deg, #4a5a9a 0%, #5a3a8a 100%) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .admin-sidebar {
+  background: #1e1e2e !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-theme="dark"] .sidebar-item {
+  color: #b8b8b8 !important;
+}
+
+[data-theme="dark"] .sidebar-item:hover {
+  background: #2a2a3e !important;
+  color: #a0b0f0 !important;
+}
+
+[data-theme="dark"] .sidebar-item.router-link-active {
+  background: #2a2a3e !important;
+  color: #a0b0f0 !important;
+  border-left-color: #a0b0f0 !important;
+}
+
+[data-theme="dark"] .admin-main {
+  background: #1e1e2e !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-theme="dark"] .admin-main .page-header h2 {
+  color: #eaeaea !important;
+}
+
+[data-theme="dark"] .admin-main .search-wrapper {
+  background: #252535 !important;
+}
+
+[data-theme="dark"] .admin-main .loading {
+  color: #888 !important;
+}
+
+[data-theme="dark"] .admin-main .pagination-wrapper {
+  border-top-color: #2a2a4e !important;
+}
+
+/* Element Plus 组件暗色模式 */
+[data-theme="dark"] .admin-main .el-table {
+  --el-table-bg-color: #1e1e2e !important;
+  --el-table-tr-bg-color: #1e1e2e !important;
+  --el-table-header-bg-color: #252535 !important;
+  --el-table-row-hover-bg-color: #2a2a3e !important;
+  --el-table-border-color: #2a2a4e !important;
+  --el-table-text-color: #e0e0e0 !important;
+  --el-table-header-text-color: #eaeaea !important;
+}
+
+[data-theme="dark"] .admin-main .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+  background: #252535 !important;
+}
+
+[data-theme="dark"] .admin-main .el-input__wrapper,
+[data-theme="dark"] .admin-main .el-textarea__inner {
+  background-color: #252535 !important;
+  box-shadow: 0 0 0 1px #3a3a5a inset !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .admin-main .el-input__inner,
+[data-theme="dark"] .admin-main .el-textarea__inner {
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .admin-main .el-select-dropdown {
+  background-color: #1e1e2e !important;
+  border-color: #2a2a4e !important;
+}
+
+[data-theme="dark"] .admin-main .el-form-item__label {
+  color: #b8b8b8 !important;
+}
+
+[data-theme="dark"] .admin-main .el-dialog {
+  background-color: #1e1e2e !important;
+}
+
+[data-theme="dark"] .admin-main .el-dialog__title {
+  color: #eaeaea !important;
+}
+
+[data-theme="dark"] .admin-main .el-tabs__item {
+  color: #b8b8b8 !important;
+}
+
+[data-theme="dark"] .admin-main .el-tabs__item.is-active {
+  color: #a0b0f0 !important;
+}
+
+[data-theme="dark"] .admin-main .el-tabs__nav-wrap::after {
+  background-color: #2a2a4e !important;
+}
+
+[data-theme="dark"] .admin-main .markdown-preview {
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .admin-main .markdown-body h1,
+[data-theme="dark"] .admin-main .markdown-body h2,
+[data-theme="dark"] .admin-main .markdown-body h3,
+[data-theme="dark"] .admin-main .markdown-body h4 {
+  color: #eaeaea !important;
+}
+
+[data-theme="dark"] .admin-main .markdown-body code {
+  background-color: rgba(239, 112, 96, 0.1) !important;
+  color: rgb(239, 112, 96) !important;
+}
+
+[data-theme="dark"] .admin-main .markdown-body pre {
+  background-color: #1e1e2e !important;
+  border-color: #2a2a4e !important;
+}
+
+[data-theme="dark"] .admin-main .markdown-body blockquote {
+  color: #999 !important;
+  border-left-color: rgb(239, 112, 96) !important;
+  background: rgba(239, 112, 96, 0.06) !important;
+}
+
 /* 全局代码块样式 */
 .markdown-body pre {
   padding: 0 !important;
@@ -648,6 +782,110 @@ body {
 [data-theme="dark"] .el-pagination .btn-next {
   background: #1b1b1f !important;
   color: white !important;
+  border-color: #2a2a4e !important;
+}
+
+/* ========== Element Plus 弹出层暗色模式（全局） ========== */
+/* 下拉选择框 */
+[data-theme="dark"] .el-select-dropdown {
+  background-color: #1e1e2e !important;
+  border: 1px solid #2a2a4e !important;
+}
+
+[data-theme="dark"] .el-select-dropdown__item {
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .el-select-dropdown__item:hover,
+[data-theme="dark"] .el-select-dropdown__item.hover {
+  background-color: #2a2a3e !important;
+}
+
+[data-theme="dark"] .el-select-dropdown__item.is-selected {
+  color: #667eea !important;
+}
+
+[data-theme="dark"] .el-select-dropdown__empty {
+  color: #888 !important;
+}
+
+/* 日期选择器 */
+[data-theme="dark"] .el-picker-panel {
+  background-color: #1e1e2e !important;
+  border-color: #2a2a4e !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .el-picker-panel__body-wrapper,
+[data-theme="dark"] .el-date-range-picker__content,
+[data-theme="dark"] .el-date-picker__header,
+[data-theme="dark"] .el-date-range-picker__header {
+  background-color: #1e1e2e !important;
+  color: #eaeaea !important;
+}
+
+[data-theme="dark"] .el-picker-panel__icon-btn {
+  color: #b8b8b8 !important;
+}
+
+[data-theme="dark"] .el-picker-panel__icon-btn:hover {
+  color: #667eea !important;
+}
+
+[data-theme="dark"] .el-date-table th {
+  color: #888 !important;
+  border-bottom-color: #2a2a4e !important;
+}
+
+[data-theme="dark"] .el-date-table td .el-date-table-cell {
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .el-date-table td.current:not(.disabled) .el-date-table-cell__text {
+  background-color: #667eea !important;
+}
+
+[data-theme="dark"] .el-date-table td .el-date-table-cell:hover {
+  color: #667eea !important;
+}
+
+[data-theme="dark"] .el-date-table td.next-month .el-date-table-cell,
+[data-theme="dark"] .el-date-table td.prev-month .el-date-table-cell {
+  color: #555 !important;
+}
+
+[data-theme="dark"] .el-date-table td.in-range .el-date-table-cell {
+  background-color: rgba(102, 126, 234, 0.2) !important;
+}
+
+/* 输入框后缀图标 */
+[data-theme="dark"] .el-input__suffix-inner .el-icon {
+  color: #888 !important;
+}
+
+/* Select 输入框本身 */
+[data-theme="dark"] .admin-main .el-select .el-select__wrapper {
+  background-color: #252535 !important;
+  box-shadow: 0 0 0 1px #3a3a5a inset !important;
+}
+
+[data-theme="dark"] .admin-main .el-select .el-select__placeholder {
+  color: #888 !important;
+}
+
+[data-theme="dark"] .admin-main .el-select .el-select__caret {
+  color: #888 !important;
+}
+
+/* Popper 箭头 */
+[data-theme="dark"] .el-popper.is-dark {
+  background-color: #1e1e2e !important;
+  border-color: #2a2a4e !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .el-popper.is-dark .el-popper__arrow::before {
+  background-color: #1e1e2e !important;
   border-color: #2a2a4e !important;
 }
 </style>

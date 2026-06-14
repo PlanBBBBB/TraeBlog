@@ -167,10 +167,6 @@ body {
   color: #888 !important;
 }
 
-[data-theme="dark"] .tag-item {
-  background: #2a2a4e !important;
-  color: #b8b8b8 !important;
-}
 
 [data-theme="dark"] .outline-item {
   color: #b8b8b8 !important;

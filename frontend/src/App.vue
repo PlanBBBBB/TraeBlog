@@ -528,7 +528,7 @@ body {
 /* 全局代码块样式 */
 .markdown-body pre {
   padding: 0 !important;
-  overflow-x: visible !important;
+  overflow-x: auto !important;
   font-size: 0.9em !important;
   line-height: 1.0 !important;
   background-color: #f6f8fa !important;
@@ -538,11 +538,39 @@ body {
   box-sizing: border-box !important;
   border: 1px solid #e8e8e8 !important;
   counter-reset: line !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #c1c1c1 transparent !important;
+}
+
+.markdown-body pre::-webkit-scrollbar {
+  height: 6px;
+}
+
+.markdown-body pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.markdown-body pre::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1;
+  border-radius: 3px;
+}
+
+.markdown-body pre::-webkit-scrollbar-thumb:hover {
+  background-color: #a0a0a0;
 }
 
 [data-theme="dark"] .markdown-body pre {
   background-color: #1e1e2e !important;
   border: 1px solid #2a2a4e !important;
+  scrollbar-color: #45475a transparent !important;
+}
+
+[data-theme="dark"] .markdown-body pre::-webkit-scrollbar-thumb {
+  background-color: #45475a;
+}
+
+[data-theme="dark"] .markdown-body pre::-webkit-scrollbar-thumb:hover {
+  background-color: #585b70;
 }
 
 .markdown-body pre code {
@@ -552,7 +580,7 @@ body {
   font-size: 1em !important;
   color: #24292f !important;
   display: block !important;
-  overflow-x: visible !important;
+  overflow-x: auto !important;
   line-height: 1.3 !important;
 }
 

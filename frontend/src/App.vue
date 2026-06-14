@@ -59,10 +59,12 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: var(--bg-primary);
 }
 
 .main-content {
   flex: 1;
+  background: var(--bg-primary);
 }
 
 .footer {
@@ -182,6 +184,49 @@ body {
 [data-theme="dark"] .article-full {
   background: #1b1b1f !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* About 页面暗色模式 */
+[data-theme="dark"] .about-card {
+  background: #1b1b1f !important;
+  box-shadow: none !important;
+}
+
+[data-theme="dark"] .about-card .profile h3 {
+  color: #eaeaea !important;
+}
+
+[data-theme="dark"] .about-card .profile .bio {
+  color: #888 !important;
+}
+
+[data-theme="dark"] .about-card .info-section h4 {
+  color: #eaeaea !important;
+}
+
+[data-theme="dark"] .about-card .info-section p {
+  color: #b8b8b8 !important;
+}
+
+[data-theme="dark"] .about-card .info-section li {
+  color: #b8b8b8 !important;
+}
+
+[data-theme="dark"] .about-card .avatar {
+  border-color: #2a2a4e !important;
+}
+
+[data-theme="dark"] .about-card .resume-link {
+  background: linear-gradient(135deg, #1e1e2e 0%, #252535 100%) !important;
+  border-color: #2a2a4e !important;
+}
+
+[data-theme="dark"] .about-card .resume-title {
+  color: #eaeaea !important;
+}
+
+[data-theme="dark"] .about-card .resume-desc {
+  color: #888 !important;
 }
 
 [data-theme="dark"] .article-title {

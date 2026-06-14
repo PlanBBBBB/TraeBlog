@@ -423,8 +423,8 @@ onMounted(() => {
 }
 
 :global([data-theme="dark"]) .tag-item {
-  background: #2a2a4e;
-  color: #b8b8b8;
+  background: #2a2a4e !important;
+  color: #b8b8b8 !important;
 }
 
 .tag-item:hover {

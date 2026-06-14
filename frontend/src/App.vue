@@ -172,6 +172,16 @@ body {
   color: #eaeaea !important;
 }
 
+[data-theme="dark"] .sidebar .tag-item {
+  background: #2a2a4e !important;
+  color: #b8b8b8 !important;
+}
+
+[data-theme="dark"] .sidebar .tag-item:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+}
+
 
 [data-theme="dark"] .outline-item {
   color: #b8b8b8 !important;

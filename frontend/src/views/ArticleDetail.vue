@@ -91,7 +91,7 @@ const renderedContent = computed(() => {
   
   // 给代码块添加行号
   result = result.replace(/<pre><code(.*?)>([\s\S]*?)<\/code><\/pre>/g, (match, attrs, code) => {
-    const lines = code.split('\n').filter(line => line.trim() !== '' || line === '')
+    const lines = code.replace(/\n$/, '').split('\n')
     const numberedCode = lines.map((line, index) => {
       return `<span class="code-line">${line}</span>`
     }).join('\n')

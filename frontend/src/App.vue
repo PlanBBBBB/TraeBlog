@@ -7,11 +7,13 @@
     <footer class="footer">
       <p>&copy; 2026 PlanB's Blog. All rights reserved.</p>
     </footer>
+    <ChatBot />
   </div>
 </template>
 
 <script setup>
 import Navbar from './components/Navbar.vue'
+import ChatBot from './components/ChatBot.vue'
 </script>
 
 <style>

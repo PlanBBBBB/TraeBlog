@@ -2,7 +2,7 @@
   <aside class="sidebar">
     <div class="sidebar-card">
       <div class="profile">
-        <img :src="avatar" alt="头像" class="avatar" />
+        <img :src="avatar" alt="头像" class="avatar" @dblclick="toggleChatBubble" :title="'双击切换AI提示气泡'" />
         <h3>PlanB</h3>
         <p>0基础，学IT</p>
       </div>
@@ -103,10 +103,19 @@
       </div>
     </div>
   </aside>
+
+  <!-- 气泡提示开关通知 -->
+  <Teleport to="body">
+    <Transition name="toast-fade">
+      <div v-if="showBubbleToast" class="bubble-toast" :class="{ dark: isDark }">
+        {{ bubbleToastText }}
+      </div>
+    </Transition>
+  </Teleport>
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import avatar from '../assets/avatar.jpg'
 import { categoryApi, tagApi, articleApi } from '../api/index'
 
@@ -240,6 +249,51 @@ onMounted(() => {
   loadData()
   articleOutline.value = parseMarkdownOutline(props.articleContent)
 })
+
+// 气泡提示开关
+const showBubbleToast = ref(false)
+const bubbleToastText = ref('')
+const bubbleDisabled = ref(false)
+let toastTimer = null
+
+const isDark = ref(document.documentElement.getAttribute('data-theme') === 'dark')
+let themeObserver = null
+
+onMounted(() => {
+  themeObserver = new MutationObserver(() => {
+    isDark.value = document.documentElement.getAttribute('data-theme') === 'dark'
+  })
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme']
+  })
+  // 监听气泡状态变化，同步本地状态
+  window.addEventListener('chatBubbleToggle', onBubbleStateChange)
+})
+
+onUnmounted(() => {
+  themeObserver?.disconnect()
+  clearTimeout(toastTimer)
+  window.removeEventListener('chatBubbleToggle', onBubbleStateChange)
+})
+
+function onBubbleStateChange(e) {
+  bubbleDisabled.value = e.detail.disabled
+}
+
+function toggleChatBubble() {
+  const next = !bubbleDisabled.value
+  bubbleDisabled.value = next
+  localStorage.setItem('chatBubbleDisabled', String(next))
+  window.dispatchEvent(new CustomEvent('chatBubbleToggle', { detail: { disabled: next } }))
+
+  bubbleToastText.value = next ? '✅ 已关闭 AI 提示气泡' : '🔔 已开启 AI 提示气泡'
+  showBubbleToast.value = true
+  clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => {
+    showBubbleToast.value = false
+  }, 2500)
+}
 </script>
 
 <style scoped>
@@ -536,5 +590,59 @@ onMounted(() => {
 
 .outline-text {
   display: inline;
+}
+
+/* 头像可双击提示 */
+.avatar {
+  cursor: pointer;
+}
+
+.avatar:active {
+  transform: scale(0.95);
+}
+</style>
+
+<!-- 气泡 Toast 样式（非 scoped，因为 Teleport 到 body） -->
+<style>
+.bubble-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999;
+  padding: 10px 24px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.06);
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.bubble-toast.dark {
+  background: rgba(42, 42, 78, 0.95);
+  color: #e0e0e0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.toast-fade-enter-active {
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.toast-fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast-fade-enter-from {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-10px);
+}
+
+.toast-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-10px);
 }
 </style>

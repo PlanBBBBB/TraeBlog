@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.planb.blog.entity.Article;
 import com.planb.blog.mapper.ArticleMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -14,8 +16,15 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
+
+    private final ApplicationEventPublisher eventPublisher;
+
+    public ArticleService(ApplicationEventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
+    }
 
     public Page<Article> getArticles(int page, int size) {
         return this.page(new Page<>(page, size), 
@@ -85,6 +94,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
             article.setIsLocked(false);
         }
         this.save(article);
+        publishArticleChangedEvent();
         return article;
     }
 
@@ -99,12 +109,30 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
             article.setIsLocked(articleDetails.getIsLocked());
             article.setPassword(articleDetails.getPassword());
             this.updateById(article);
+            publishArticleChangedEvent();
             return article;
         }
         return null;
     }
 
     public boolean deleteArticle(Long id) {
-        return this.removeById(id);
+        boolean result = this.removeById(id);
+        if (result) {
+            publishArticleChangedEvent();
+        }
+        return result;
+    }
+
+    private void publishArticleChangedEvent() {
+        eventPublisher.publishEvent(new ArticleChangedEvent(this));
+    }
+
+    /**
+     * 文章变更事件
+     */
+    public static class ArticleChangedEvent extends org.springframework.context.ApplicationEvent {
+        public ArticleChangedEvent(Object source) {
+            super(source);
+        }
     }
 }

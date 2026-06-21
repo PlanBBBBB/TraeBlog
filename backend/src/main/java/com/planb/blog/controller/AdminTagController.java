@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/tags")
@@ -47,9 +48,15 @@ public class AdminTagController {
 
     @DeleteMapping("/{id}")
     public Result<Void> deleteTag(@PathVariable Long id) {
-        if (tagService.deleteTag(id)) {
-            return Result.success();
+        Tag tag = tagService.getById(id);
+        if (tag == null) {
+            return Result.error("标签不存在");
         }
-        return Result.error("标签不存在");
+        List<String> titles = tagService.findAssociatedArticleTitles(tag.getName());
+        if (!titles.isEmpty()) {
+            return Result.error("无法删除，该标签下有关联文章：" + String.join("、", titles));
+        }
+        tagService.deleteTag(id);
+        return Result.success();
     }
 }

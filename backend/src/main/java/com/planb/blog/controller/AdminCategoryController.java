@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/categories")
@@ -47,9 +48,15 @@ public class AdminCategoryController {
 
     @DeleteMapping("/{id}")
     public Result<Void> deleteCategory(@PathVariable Long id) {
-        if (categoryService.deleteCategory(id)) {
-            return Result.success();
+        Category category = categoryService.getById(id);
+        if (category == null) {
+            return Result.error("分类不存在");
         }
-        return Result.error("分类不存在");
+        List<String> titles = categoryService.findAssociatedArticleTitles(category.getName());
+        if (!titles.isEmpty()) {
+            return Result.error("无法删除，该分类下有关联文章：" + String.join("、", titles));
+        }
+        categoryService.deleteCategory(id);
+        return Result.success();
     }
 }

@@ -3,7 +3,9 @@ package com.planb.blog.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.planb.blog.entity.Article;
 import com.planb.blog.entity.Category;
+import com.planb.blog.mapper.ArticleMapper;
 import com.planb.blog.mapper.CategoryMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -13,9 +15,16 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService extends ServiceImpl<CategoryMapper, Category> {
+
+    private final ArticleMapper articleMapper;
+
+    public CategoryService(ArticleMapper articleMapper) {
+        this.articleMapper = articleMapper;
+    }
 
     public List<Category> getAllCategories() {
         return this.list();
@@ -75,6 +84,18 @@ public class CategoryService extends ServiceImpl<CategoryMapper, Category> {
             return category;
         }
         return null;
+    }
+
+    /**
+     * 查找使用该分类的文章标题列表
+     */
+    public List<String> findAssociatedArticleTitles(String categoryName) {
+        LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Article::getCategory, categoryName)
+                .select(Article::getTitle);
+        return articleMapper.selectList(wrapper).stream()
+                .map(Article::getTitle)
+                .collect(Collectors.toList());
     }
 
     public boolean deleteCategory(Long id) {

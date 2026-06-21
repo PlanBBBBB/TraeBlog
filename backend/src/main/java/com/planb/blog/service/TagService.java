@@ -3,7 +3,9 @@ package com.planb.blog.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.planb.blog.entity.Article;
 import com.planb.blog.entity.Tag;
+import com.planb.blog.mapper.ArticleMapper;
 import com.planb.blog.mapper.TagMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -13,9 +15,16 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TagService extends ServiceImpl<TagMapper, Tag> {
+
+    private final ArticleMapper articleMapper;
+
+    public TagService(ArticleMapper articleMapper) {
+        this.articleMapper = articleMapper;
+    }
 
     public List<Tag> getAllTags() {
         return this.list();
@@ -75,6 +84,22 @@ public class TagService extends ServiceImpl<TagMapper, Tag> {
             return tag;
         }
         return null;
+    }
+
+    /**
+     * 查找使用该标签的文章标题列表
+     */
+    public List<String> findAssociatedArticleTitles(String tagName) {
+        LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
+        wrapper.and(w -> w
+                .eq(Article::getTags, tagName)
+                .or().likeRight(Article::getTags, tagName + ",")
+                .or().likeLeft(Article::getTags, "," + tagName)
+                .or().like(Article::getTags, "," + tagName + ",")
+        ).select(Article::getTitle);
+        return articleMapper.selectList(wrapper).stream()
+                .map(Article::getTitle)
+                .collect(Collectors.toList());
     }
 
     public boolean deleteTag(Long id) {

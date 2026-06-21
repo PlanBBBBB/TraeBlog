@@ -125,7 +125,8 @@ const handleVerifyPassword = async () => {
     return
   }
   try {
-    await articleApi.verifyPassword(article.value.id, passwordInput.value)
+    const res = await articleApi.verifyPassword(article.value.id, passwordInput.value)
+    article.value.content = res.data
     isUnlocked.value = true
     ElMessage.success('密码正确！')
   } catch (error) {

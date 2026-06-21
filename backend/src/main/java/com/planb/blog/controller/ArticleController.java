@@ -35,10 +35,12 @@ public class ArticleController {
     }
 
     @PostMapping("/{id}/verify-password")
-    public Result<Boolean> verifyPassword(@PathVariable Long id, @RequestBody PasswordRequest request) {
+    public Result<String> verifyPassword(@PathVariable Long id, @RequestBody PasswordRequest request) {
         boolean valid = articleService.verifyPassword(id, request.getPassword());
         if (valid) {
-            return Result.success(true);
+            Article article = articleService.getById(id);
+            String content = (article != null) ? article.getContent() : null;
+            return Result.success(content);
         } else {
             return Result.error("密码错误");
         }

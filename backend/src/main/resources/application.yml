@@ -5,6 +5,9 @@ admin:
   username: ${ADMIN_USERNAME}
   password: ${ADMIN_PASSWORD}
 
+jwt:
+  secret: ${JWT_SECRET}
+
 spring:
   application:
     name: blog-backend

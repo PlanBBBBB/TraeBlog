@@ -2,8 +2,9 @@ package com.planb.blog.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -14,9 +15,16 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET = "myBlogSecretKeyForJWTTokenGeneration2024LongEnoughForHS256";
-    private static final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
+    @Value("${jwt.secret}")
+    private String secret;
+
+    private Key key;
     private static final long EXPIRATION = 7 * 24 * 60 * 60 * 1000;
+
+    @PostConstruct
+    public void init() {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();

@@ -1,6 +1,10 @@
 server:
   port: 8083
 
+admin:
+  username: ${ADMIN_USERNAME}
+  password: ${ADMIN_PASSWORD}
+
 spring:
   application:
     name: blog-backend

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.planb.blog.entity.*;
 import com.planb.blog.mapper.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -23,14 +24,20 @@ public class DataInitializer implements CommandLineRunner {
     private final LinkMapper linkMapper;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${admin.username}")
+    private String adminUsername;
+
+    @Value("${admin.password}")
+    private String adminPassword;
+
     @Override
     public void run(String... args) {
         if (adminMapper.selectCount(null) == 0) {
             Admin admin = new Admin();
-            admin.setUsername("PlanB");
-            admin.setPassword(passwordEncoder.encode("pan20030102"));
+            admin.setUsername(adminUsername);
+            admin.setPassword(passwordEncoder.encode(adminPassword));
             adminMapper.insert(admin);
-            System.out.println("管理员账号已创建：PlanB / pan20030102");
+            System.out.println("管理员账号已创建");
         } else {
             // 迁移旧管理员账号为新的用户名和密码
             migrateAdminCredentials();
@@ -140,10 +147,10 @@ public class DataInitializer implements CommandLineRunner {
         Admin admin = adminMapper.selectOne(
                 new LambdaQueryWrapper<Admin>().eq(Admin::getUsername, "admin"));
         if (admin != null) {
-            admin.setUsername("PlanB");
-            admin.setPassword(passwordEncoder.encode("pan20030102"));
+            admin.setUsername(adminUsername);
+            admin.setPassword(passwordEncoder.encode(adminPassword));
             adminMapper.updateById(admin);
-            System.out.println("管理员账号已迁移为：PlanB / pan20030102");
+            System.out.println("管理员账号已迁移");
         }
     }
 }

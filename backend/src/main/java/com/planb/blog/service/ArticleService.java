@@ -7,6 +7,7 @@ import com.planb.blog.entity.Article;
 import com.planb.blog.mapper.ArticleMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -21,9 +22,11 @@ import java.util.Optional;
 public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
 
     private final ApplicationEventPublisher eventPublisher;
+    private final PasswordEncoder passwordEncoder;
 
-    public ArticleService(ApplicationEventPublisher eventPublisher) {
+    public ArticleService(ApplicationEventPublisher eventPublisher, PasswordEncoder passwordEncoder) {
         this.eventPublisher = eventPublisher;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Page<Article> getArticles(int page, int size) {
@@ -70,7 +73,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
     public boolean verifyPassword(Long id, String password) {
         Article article = this.getById(id);
         if (article != null && article.getIsLocked() != null && article.getIsLocked()) {
-            return article.getPassword() != null && article.getPassword().equals(password);
+            return article.getPassword() != null && passwordEncoder.matches(password, article.getPassword());
         }
         return true; // 如果没有锁，直接通过
     }
@@ -93,6 +96,10 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         if (article.getIsLocked() == null) {
             article.setIsLocked(false);
         }
+        // 密码加密存储
+        if (article.getIsLocked() && StringUtils.hasText(article.getPassword())) {
+            article.setPassword(passwordEncoder.encode(article.getPassword()));
+        }
         this.save(article);
         publishArticleChangedEvent();
         return article;
@@ -107,7 +114,18 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
             article.setCategory(articleDetails.getCategory());
             article.setTags(articleDetails.getTags());
             article.setIsLocked(articleDetails.getIsLocked());
-            article.setPassword(articleDetails.getPassword());
+            // 密码加密存储：仅在密码有值时重新加密
+            if (articleDetails.getIsLocked() != null && articleDetails.getIsLocked()
+                    && StringUtils.hasText(articleDetails.getPassword())) {
+                // 如果密码不是已加密的格式，则加密
+                if (!articleDetails.getPassword().startsWith("$2a$")) {
+                    article.setPassword(passwordEncoder.encode(articleDetails.getPassword()));
+                } else {
+                    article.setPassword(articleDetails.getPassword());
+                }
+            } else {
+                article.setPassword(articleDetails.getPassword());
+            }
             this.updateById(article);
             publishArticleChangedEvent();
             return article;

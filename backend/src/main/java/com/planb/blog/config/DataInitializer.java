@@ -64,6 +64,9 @@ public class DataInitializer implements CommandLineRunner {
         if (articleMapper.selectCount(null) == 0) {
             createSampleArticles();
         }
+
+        // 迁移已有文章的明文密码为 BCrypt 加密格式
+        migrateArticlePasswords();
     }
 
     private Link createLink(String name, String url, String desc) {
@@ -100,5 +103,29 @@ public class DataInitializer implements CommandLineRunner {
         article.setCategory(category);
         article.setTags(tags);
         return article;
+    }
+
+    /**
+     * 迁移已有文章的明文密码为 BCrypt 加密格式
+     * BCrypt 哈希以 $2a$ 开头，如果密码不符合此格式则视为明文
+     */
+    private void migrateArticlePasswords() {
+        List<Article> articles = articleMapper.selectList(
+                new LambdaQueryWrapper<Article>()
+                        .eq(Article::getIsLocked, true)
+                        .isNotNull(Article::getPassword)
+        );
+        int migrated = 0;
+        for (Article article : articles) {
+            String pwd = article.getPassword();
+            if (pwd != null && !pwd.startsWith("$2a$") && !pwd.startsWith("$2b$") && !pwd.startsWith("$2y$")) {
+                article.setPassword(passwordEncoder.encode(pwd));
+                articleMapper.updateById(article);
+                migrated++;
+            }
+        }
+        if (migrated > 0) {
+            System.out.println("已迁移 " + migrated + " 篇文章的密码为 BCrypt 加密格式");
+        }
     }
 }

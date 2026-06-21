@@ -42,6 +42,7 @@ const handleLogout = () => {
     type: 'warning'
   }).then(() => {
     localStorage.removeItem('isLoggedIn')
+    localStorage.removeItem('token')
     ElMessage.success('已退出登录')
     router.push('/admin/login')
   }).catch(() => {})

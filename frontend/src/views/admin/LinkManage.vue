@@ -204,7 +204,7 @@ const handleDelete = (row) => {
       ElMessage.success('删除成功')
       loadLinks()
     } catch (error) {
-      ElMessage.error('删除失败')
+      // 拦截器已统一处理错误提示
     }
   }).catch(() => {})
 }
@@ -230,7 +230,7 @@ const handleSubmit = async () => {
     dialogVisible.value = false
     loadLinks()
   } catch (error) {
-    ElMessage.error('操作失败')
+    // 拦截器已统一处理错误提示
   }
 }
 

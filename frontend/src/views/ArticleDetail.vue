@@ -130,7 +130,7 @@ const handleVerifyPassword = async () => {
     isUnlocked.value = true
     ElMessage.success('密码正确！')
   } catch (error) {
-    ElMessage.error('密码错误，请重试')
+    // 拦截器已统一处理错误提示
   }
 }
 

@@ -123,7 +123,6 @@ const handleLogin = async () => {
     }
   } catch (err) {
     error.value = '用户名或密码错误'
-    ElMessage.error('登录失败')
   } finally {
     loading.value = false
   }

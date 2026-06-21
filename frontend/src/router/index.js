@@ -48,18 +48,36 @@ const router = createRouter({
   }
 })
 
+// 校验 JWT token 是否有效（存在且未过期）
+function isValidToken() {
+  const token = localStorage.getItem('token')
+  if (!token) return false
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    return payload.exp * 1000 > Date.now()
+  } catch {
+    return false
+  }
+}
+
 // 路由守卫
 router.beforeEach((to, from, next) => {
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
-  
+  const authenticated = isValidToken()
+
+  // 如果 token 无效，清除登录状态
+  if (!authenticated) {
+    localStorage.removeItem('isLoggedIn')
+    localStorage.removeItem('token')
+  }
+
   // 如果是去管理后台（除了登录页面），需要检查登录状态
   if (to.path.startsWith('/admin') && to.path !== '/admin/login') {
-    if (!isLoggedIn) {
+    if (!authenticated) {
       next('/admin/login')
     } else {
       next()
     }
-  } else if (to.path === '/admin/login' && isLoggedIn) {
+  } else if (to.path === '/admin/login' && authenticated) {
     // 如果已经登录，直接去文章管理页面
     next('/admin/articles')
   } else {

@@ -29,6 +29,8 @@ public class CategoryController {
             @PathVariable String name,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "6") int size) {
-        return Result.success(articleService.getArticlesByCategory(name, page, size));
+        Page<Article> result = articleService.getArticlesByCategory(name, page, size);
+        ArticleService.sanitizeForPublic(result);
+        return Result.success(result);
     }
 }

@@ -29,6 +29,8 @@ public class TagController {
             @PathVariable String name,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "6") int size) {
-        return Result.success(articleService.getArticlesByTag(name, page, size));
+        Page<Article> result = articleService.getArticlesByTag(name, page, size);
+        ArticleService.sanitizeForPublic(result);
+        return Result.success(result);
     }
 }

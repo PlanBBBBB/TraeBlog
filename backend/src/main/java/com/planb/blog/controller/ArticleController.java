@@ -19,13 +19,18 @@ public class ArticleController {
     public Result<Page<Article>> getArticles(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "6") int size) {
-        return Result.success(articleService.getArticles(page, size));
+        Page<Article> result = articleService.getArticles(page, size);
+        ArticleService.sanitizeForPublic(result);
+        return Result.success(result);
     }
 
     @GetMapping("/{id}")
     public Result<Article> getArticleById(@PathVariable Long id) {
         return articleService.getArticleById(id)
-                .map(Result::success)
+                .map(article -> {
+                    ArticleService.sanitizeForPublic(article);
+                    return Result.success(article);
+                })
                 .orElse(Result.error("文章不存在"));
     }
 

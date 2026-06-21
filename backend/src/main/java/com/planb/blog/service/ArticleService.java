@@ -29,6 +29,19 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 公开接口脱敏：将锁定文章的 content 置为 null，防止内容泄露
+     */
+    public static void sanitizeForPublic(Page<Article> page) {
+        page.getRecords().forEach(ArticleService::sanitizeForPublic);
+    }
+
+    public static void sanitizeForPublic(Article article) {
+        if (article != null && Boolean.TRUE.equals(article.getIsLocked())) {
+            article.setContent(null);
+        }
+    }
+
     public Page<Article> getArticles(int page, int size) {
         return this.page(new Page<>(page, size), 
                 new LambdaQueryWrapper<Article>().orderByDesc(Article::getCreateTime));

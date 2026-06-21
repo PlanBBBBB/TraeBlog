@@ -114,18 +114,21 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
             article.setCategory(articleDetails.getCategory());
             article.setTags(articleDetails.getTags());
             article.setIsLocked(articleDetails.getIsLocked());
-            // 密码加密存储：仅在密码有值时重新加密
+            // 密码处理：仅在锁定且有新密码时更新，否则保留原密码
             if (articleDetails.getIsLocked() != null && articleDetails.getIsLocked()
                     && StringUtils.hasText(articleDetails.getPassword())) {
+                String newPwd = articleDetails.getPassword();
                 // 如果密码不是已加密的格式，则加密
-                if (!articleDetails.getPassword().startsWith("$2a$")) {
-                    article.setPassword(passwordEncoder.encode(articleDetails.getPassword()));
+                if (!newPwd.startsWith("$2a$") && !newPwd.startsWith("$2b$") && !newPwd.startsWith("$2y$")) {
+                    article.setPassword(passwordEncoder.encode(newPwd));
                 } else {
-                    article.setPassword(articleDetails.getPassword());
+                    article.setPassword(newPwd);
                 }
-            } else {
-                article.setPassword(articleDetails.getPassword());
+            } else if (articleDetails.getIsLocked() == null || !articleDetails.getIsLocked()) {
+                // 未锁定时清空密码
+                article.setPassword(null);
             }
+            // 其他情况（锁定但密码为空）保留原密码不变
             this.updateById(article);
             publishArticleChangedEvent();
             return article;

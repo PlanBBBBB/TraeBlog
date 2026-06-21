@@ -27,10 +27,13 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         if (adminMapper.selectCount(null) == 0) {
             Admin admin = new Admin();
-            admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("123456"));
+            admin.setUsername("PlanB");
+            admin.setPassword(passwordEncoder.encode("pan20030102"));
             adminMapper.insert(admin);
-            System.out.println("管理员账号已创建：admin / 123456");
+            System.out.println("管理员账号已创建：PlanB / pan20030102");
+        } else {
+            // 迁移旧管理员账号为新的用户名和密码
+            migrateAdminCredentials();
         }
 
         if (categoryMapper.selectCount(null) == 0) {
@@ -126,6 +129,21 @@ public class DataInitializer implements CommandLineRunner {
         }
         if (migrated > 0) {
             System.out.println("已迁移 " + migrated + " 篇文章的密码为 BCrypt 加密格式");
+        }
+    }
+
+    /**
+     * 迁移管理员账号为新的用户名和密码
+     * 仅在旧用户名为 "admin" 时触发
+     */
+    private void migrateAdminCredentials() {
+        Admin admin = adminMapper.selectOne(
+                new LambdaQueryWrapper<Admin>().eq(Admin::getUsername, "admin"));
+        if (admin != null) {
+            admin.setUsername("PlanB");
+            admin.setPassword(passwordEncoder.encode("pan20030102"));
+            adminMapper.updateById(admin);
+            System.out.println("管理员账号已迁移为：PlanB / pan20030102");
         }
     }
 }
